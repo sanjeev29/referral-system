@@ -11,7 +11,7 @@ class InvitationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Invitation
-        fields = ['email', 'link', 'created_at', 'updated_at']
+        fields = ['email', 'link', 'expired', 'expiry_at', 'created_at', 'updated_at']
         read_only_fields = ['link']
 
 
