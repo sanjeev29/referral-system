@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  web:
+    build: .
+    entrypoint: python /code/manage.py runserver 0.0.0.0:8000
+    restart: always
+    environment:
+      - ENVIRONMENT=dev
+    volumes:
+      - ./:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+  db:
+    build: docker/postgres/.
+    environment:
+      #      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - 5432:5432
+    volumes:
+      - referral_system_data:/var/lib/postgresql/data/
+
+volumes:
+  referral_system_data:
