@@ -30,6 +30,8 @@ class Invitation(models.Model):
     id = models.BigAutoField(primary_key=True)
     email = models.EmailField()
     link = models.URLField(unique=True)
+    expired = models.BooleanField(default=False)
+    expiry_at = models.DateTimeField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

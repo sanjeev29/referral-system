@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
 from api.models import Profile, Invitation
 
 
+# Register your models here.
 class ProfileAdmin(admin.ModelAdmin):
     """
     Admin options for Profile model
@@ -15,7 +15,7 @@ class InvitationAdmin(admin.ModelAdmin):
     """
     Admin options for Invitation model
     """
-    list_display = ('id', 'email', 'link', 'created_by', 'created_at', 'updated_at')
+    list_display = ('id', 'email', 'link', 'expired', 'expiry_at', 'created_by', 'created_at', 'updated_at')
 
 
 admin.site.register(Profile, ProfileAdmin)
