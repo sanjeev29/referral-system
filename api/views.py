@@ -18,7 +18,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
     API viewset for Invitation model
     """
     serializer_class = InvitationSerializer
-    queryset = Invitation.objects.all()
+    queryset = Invitation.objects.all().order_by('-created_at')
     permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
@@ -117,7 +117,7 @@ class ReferredUsersViewSet(viewsets.ModelViewSet, ListModelMixin):
     API viewset to get referred users
     """
     serializer_class = ProfileSerializer
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.all().order_by('-created_at')
     permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
