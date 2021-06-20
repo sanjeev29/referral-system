@@ -2,11 +2,11 @@ import uuid
 
 from django.contrib.auth.models import User
 from rest_framework import viewsets, permissions, status
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from rest_framework.response import Response
 
 from api.models import Invitation, Profile
-from api.serializers import InvitationSerializer, UserSerializer
+from api.serializers import InvitationSerializer, UserSerializer, ProfileSerializer
 
 
 # Create your views here.
@@ -80,3 +80,23 @@ class SignupViewSet(viewsets.ModelViewSet, CreateModelMixin):
 
         else:
             return Response({'message': 'Invalid link.'}, status=400)
+
+
+class ReferredUsersViewSet(viewsets.ModelViewSet, ListModelMixin):
+    """
+    API viewset to get referred users
+    """
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        queryset = Profile.objects.filter(referred_by__id=request.user.id)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
