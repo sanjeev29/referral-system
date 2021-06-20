@@ -2,6 +2,7 @@ import datetime
 import uuid
 
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from pytz import utc
 from rest_framework import viewsets, permissions, status
 from rest_framework.mixins import CreateModelMixin, ListModelMixin
@@ -44,6 +45,14 @@ class InvitationViewSet(viewsets.ModelViewSet):
         )
 
         # Send invite email to user
+        # This will not send an email as the email host is `localhost`.
+        # The email will be printed on the console.
+        send_mail(
+            subject="Invitation",
+            message=f"Here is your invite link: {link}",
+            from_email="noreply@ref.com",
+            recipient_list=[serializer.data.get('email')]
+        )
 
 
 class SignupViewSet(viewsets.ModelViewSet, CreateModelMixin):
