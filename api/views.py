@@ -18,11 +18,11 @@ class InvitationViewSet(viewsets.ModelViewSet):
     API viewset for Invitation model
     """
     serializer_class = InvitationSerializer
-    queryset = Invitation.objects.all().order_by('-created_at')
+    queryset = Invitation.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        queryset = Invitation.objects.filter(created_by__id=request.user.id)
+        queryset = Invitation.objects.filter(created_by__id=request.user.id).order_by('-created_at')
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -117,11 +117,11 @@ class ReferredUsersViewSet(viewsets.ModelViewSet, ListModelMixin):
     API viewset to get referred users
     """
     serializer_class = ProfileSerializer
-    queryset = Profile.objects.all().order_by('-created_at')
+    queryset = Profile.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        queryset = Profile.objects.filter(referred_by__id=request.user.id)
+        queryset = Profile.objects.filter(referred_by__id=request.user.id).order_by('-created_at')
 
         page = self.paginate_queryset(queryset)
         if page is not None:
