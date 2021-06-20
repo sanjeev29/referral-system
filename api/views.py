@@ -74,41 +74,42 @@ class SignupViewSet(viewsets.ModelViewSet, CreateModelMixin):
         return Response({'message': 'Signup successful.'}, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
-        invitation = Invitation.objects.get(link=self.request.build_absolute_uri())
+        try:
+            invitation = Invitation.objects.get(link=self.request.build_absolute_uri())
 
-        # Check if the invite url is valid
-        if invitation is not None:
-            if invitation.expired or datetime.datetime.now().replace(tzinfo=utc) > invitation.expiry_at:
-                # Expire the invitation
-                invitation.expired = True
-                invitation.save()
+            # Check if the invite url is valid
+            if invitation is not None:
+                if invitation.expired or datetime.datetime.now().replace(tzinfo=utc) > invitation.expiry_at:
+                    # Expire the invitation
+                    invitation.expired = True
+                    invitation.save()
 
-                return Response({'message': 'Invitation link is expired.'}, status=400)
-            else:
-                code = self.request.query_params.get('code', default=None)
+                    return Response({'message': 'Invitation link is expired.'}, status=400)
+                else:
+                    code = self.request.query_params.get('code', default=None)
 
-                user_profile = Profile.objects.get(code=code[:12])
-                if user_profile is None:
-                    return Response({'message': 'Invalid link.'}, status=400)
+                    user_profile = Profile.objects.get(code=code[:12])
+                    if user_profile is None:
+                        return Response({'message': 'Invalid link.'}, status=400)
 
-                serializer.save()
+                    serializer.save()
 
-                # Get user by email
-                user = User.objects.get(email=serializer.data.get('email'))
+                    # Get user by email
+                    user = User.objects.get(email=serializer.data.get('email'))
 
-                # Create a profile for the new user
-                Profile.objects.create(
-                    user=user,
-                    referred_by=user_profile.user
-                )
+                    # Create a profile for the new user
+                    Profile.objects.create(
+                        user=user,
+                        referred_by=user_profile.user
+                    )
 
-                # Expire the invitation
-                invitation.expired = True
-                invitation.save()
+                    # Expire the invitation
+                    invitation.expired = True
+                    invitation.save()
 
-                return None
+                    return None
 
-        else:
+        except Invitation.DoesNotExist:
             return Response({'message': 'Invalid link.'}, status=400)
 
 
