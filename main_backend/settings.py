@@ -42,8 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Packages
+    'rest_framework',
+
     # Apps
-    'api'
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +133,7 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = env_config.get("EMAIL_HOST")
+EMAIL_PORT = env_config.get("EMAIL_PORT")
