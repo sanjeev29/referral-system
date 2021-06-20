@@ -12,7 +12,7 @@ class InvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invitation
         fields = ['email', 'link', 'expired', 'expiry_at', 'created_at', 'updated_at']
-        read_only_fields = ['link']
+        read_only_fields = ['link', 'expired']
 
 
 class UserSerializer(serializers.ModelSerializer):
